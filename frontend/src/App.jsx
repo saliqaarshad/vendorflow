@@ -6,6 +6,7 @@ import Quotations from './pages/Quotations'
 import Compare from './pages/Compare'
 import AddVendor from './pages/AddVendor'
 import VendorDetail from './pages/VendorDetail'
+import AddQuotation from './pages/AddQuotation'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="vendors/add" element={<AddVendor />} />
         <Route path="vendors/:id" element={<VendorDetail />} />
         <Route path="quotations" element={<Quotations />} />
+        <Route path="quotations/add" element={<AddQuotation />} />
         <Route path="compare" element={<Compare />} />
       </Route>
     </Routes>
