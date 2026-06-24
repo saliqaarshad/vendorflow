@@ -2,19 +2,22 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const vendorRoutes = require('./routes/vendorRoutes');
+const quotationRoutes = require('./routes/quotationRoutes');
 
 dotenv.config();
 
-// Connect to MongoDB
 connectDB();
 
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Test route
+// Routes
+app.use('/api/vendors', vendorRoutes);
+app.use('/api/quotations', quotationRoutes);
+
 app.get('/', (req, res) => {
   res.json({ message: 'VendorFlow API is running' });
 });
