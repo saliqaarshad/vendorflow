@@ -12,6 +12,10 @@ export default function AddQuotation() {
     description: '',
     priority: 'med',
     dueDate: '',
+    deliveryTime: '',
+    warranty: '',
+    advancePayment: '',
+    installation: '',
   })
   const [lineItems, setLineItems] = useState([
     { name: '', qty: '', unit: '', price: '' }
@@ -60,7 +64,6 @@ export default function AddQuotation() {
   const handleSubmit = async (status = 'pending') => {
     if (!validate()) return
     try {
-      // Create a quotation for each selected vendor
       for (const vendorId of selectedVendors) {
         await createQuotation({
           title: form.title,
@@ -68,6 +71,11 @@ export default function AddQuotation() {
           vendor: vendorId,
           amount: estimatedTotal,
           status: status,
+          deliveryTime: form.deliveryTime,
+          warranty: form.warranty,
+          advancePayment: form.advancePayment,
+          installation: form.installation,
+          lineItems: lineItems.filter(item => item.name),
         })
       }
       navigate('/quotations')
@@ -88,7 +96,7 @@ export default function AddQuotation() {
       <div className="flex gap-6 flex-1">
         {/* Left Column */}
         <div className="flex-1 space-y-4">
-          {/* Title */}
+          {/* Title + Description */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 block">
               Request Title
@@ -109,10 +117,57 @@ export default function AddQuotation() {
               placeholder="Detailed technical specifications, delivery requirements, and service level expectations..."
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              rows={4}
+              rows={3}
               className={`w-full border rounded-lg px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-orange-300 resize-none text-gray-600 ${errors.description ? 'border-red-400' : 'border-gray-200'}`}
             />
             {errors.description && <p className="text-xs text-red-500 mt-1">⚠ {errors.description}</p>}
+          </div>
+
+          {/* Terms & Conditions */}
+          <div className="bg-white rounded-xl border border-gray-200 p-6">
+            <h2 className="text-sm font-semibold text-orange-500 mb-4">📋 Terms & Conditions</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-medium text-gray-600 mb-1 block">Delivery Time</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Next day delivery"
+                  value={form.deliveryTime}
+                  onChange={(e) => setForm({ ...form, deliveryTime: e.target.value })}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-orange-300"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-gray-600 mb-1 block">Warranty</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 3-year warranty"
+                  value={form.warranty}
+                  onChange={(e) => setForm({ ...form, warranty: e.target.value })}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-orange-300"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-gray-600 mb-1 block">Advance Payment</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 50% Advance required"
+                  value={form.advancePayment}
+                  onChange={(e) => setForm({ ...form, advancePayment: e.target.value })}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-orange-300"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-gray-600 mb-1 block">Installation</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Standard Included"
+                  value={form.installation}
+                  onChange={(e) => setForm({ ...form, installation: e.target.value })}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-orange-300"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Line Items */}
@@ -131,10 +186,10 @@ export default function AddQuotation() {
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-100">
                 <tr>
-                  <th className="text-left px-6 py-2 text-xs font-semibold text-gray-400 uppercase">Item Name / Description</th>
+                  <th className="text-left px-6 py-2 text-xs font-semibold text-gray-400 uppercase">Item Name</th>
                   <th className="text-left px-4 py-2 text-xs font-semibold text-gray-400 uppercase">QTY</th>
                   <th className="text-left px-4 py-2 text-xs font-semibold text-gray-400 uppercase">Unit</th>
-                  <th className="text-left px-4 py-2 text-xs font-semibold text-gray-400 uppercase">Target Price (PKR)</th>
+                  <th className="text-left px-4 py-2 text-xs font-semibold text-gray-400 uppercase">Price (PKR)</th>
                   <th className="px-4 py-2"></th>
                 </tr>
               </thead>
@@ -189,7 +244,6 @@ export default function AddQuotation() {
                     </td>
                   </tr>
                 ))}
-                {/* Click to add */}
                 <tr className="cursor-pointer hover:bg-gray-50" onClick={addLineItem}>
                   <td className="px-6 py-3 text-gray-300 text-sm italic" colSpan={5}>
                     Click to add new item...
@@ -198,7 +252,6 @@ export default function AddQuotation() {
               </tbody>
             </table>
 
-            {/* Estimated Total */}
             <div className="flex justify-end px-6 py-4 border-t border-gray-100">
               <div className="flex items-center gap-4">
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Estimated Total</span>
@@ -224,9 +277,7 @@ export default function AddQuotation() {
                     key={vendor._id}
                     onClick={() => toggleVendor(vendor._id)}
                     className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${
-                      isSelected
-                        ? 'border-orange-400 bg-orange-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                      isSelected ? 'border-orange-400 bg-orange-50' : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -243,9 +294,6 @@ export default function AddQuotation() {
                   </div>
                 )
               })}
-              {vendors.length === 0 && (
-                <p className="text-xs text-gray-400 text-center py-4">No vendors available. Add vendors first.</p>
-              )}
             </div>
           </div>
 

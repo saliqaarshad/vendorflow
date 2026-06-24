@@ -21,11 +21,42 @@ export default function Dashboard() {
   if (loading) return <div className="text-center py-10 text-gray-500">Loading...</div>
 
   const cards = [
-    { label: 'TOTAL VENDORS', value: stats?.totalVendors || 0, icon: <Users size={22} />, color: 'text-orange-500', bg: 'bg-orange-50' },
-    { label: 'ACTIVE QUOTATIONS', value: stats?.activeQuotations || 0, icon: <FileText size={22} />, color: 'text-blue-500', bg: 'bg-blue-50' },
-    { label: 'PENDING QUOTATIONS', value: stats?.pendingQuotations || 0, icon: <Clock size={22} />, color: 'text-yellow-500', bg: 'bg-yellow-50' },
-    { label: 'APPROVED QUOTATIONS', value: stats?.approvedQuotations || 0, icon: <CheckCircle size={22} />, color: 'text-green-500', bg: 'bg-green-50' },
+    {
+      label: 'TOTAL VENDORS',
+      value: stats?.totalVendors || 0,
+      icon: <Users size={18} />,
+      accent: '#B45309',
+      sub: 'Registered in system'
+    },
+    {
+      label: 'ACTIVE QUOTATIONS',
+      value: stats?.activeQuotations || 0,
+      icon: <FileText size={18} />,
+      accent: '#1D4ED8',
+      sub: 'Currently submitted'
+    },
+    {
+      label: 'PENDING QUOTATIONS',
+      value: stats?.pendingQuotations || 0,
+      icon: <Clock size={18} />,
+      accent: '#92400E',
+      sub: 'Awaiting response'
+    },
+    {
+      label: 'APPROVED QUOTATIONS',
+      value: stats?.approvedQuotations || 0,
+      icon: <CheckCircle size={18} />,
+      accent: '#065F46',
+      sub: 'Finalized awards'
+    },
   ]
+
+  const statusColors = {
+    pending: { bg: 'bg-amber-100', text: 'text-amber-800', label: 'PENDING' },
+    submitted: { bg: 'bg-blue-100', text: 'text-blue-800', label: 'SUBMITTED' },
+    approved: { bg: 'bg-emerald-100', text: 'text-emerald-800', label: 'APPROVED' },
+    rejected: { bg: 'bg-red-100', text: 'text-red-800', label: 'REJECTED' },
+  }
 
   return (
     <div>
@@ -33,60 +64,149 @@ export default function Dashboard() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Operational Overview</h1>
-          <p className="text-sm text-gray-500 mt-1">Real-time performance metrics and vendor health status.</p>
+          <p className="text-sm text-gray-400 mt-1">Real-time performance metrics and vendor health status.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <button className="flex items-center gap-2 border border-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm hover:bg-gray-50">
+            📅 Last 30 Days
+          </button>
+          <button className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800">
+            Generate Report
+          </button>
         </div>
       </div>
 
-      {/* Stat Cards */}
-      <div className="grid grid-cols-4 gap-4 mb-8">
+      {/* KPI Cards — consistent system */}
+      <div className="grid grid-cols-4 gap-4 mb-6">
         {cards.map((card, i) => (
-          <div key={i} className="bg-white rounded-xl border border-gray-200 p-5">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">{card.label}</p>
-              <div className={`${card.bg} ${card.color} p-2 rounded-lg`}>
+          <div
+            key={i}
+            className="bg-white rounded-xl border border-gray-200 p-5 relative overflow-hidden"
+            style={{ borderLeft: `4px solid ${card.accent}` }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{card.label}</p>
+              <div
+                className="w-8 h-8 rounded-lg flex items-center justify-center"
+                style={{ backgroundColor: `${card.accent}15`, color: card.accent }}
+              >
                 {card.icon}
               </div>
             </div>
-            <p className="text-3xl font-bold text-gray-900">{card.value}</p>
+            <p className="text-4xl font-black text-gray-900 mb-1">{card.value}</p>
+            <p className="text-xs text-gray-400">{card.sub}</p>
           </div>
         ))}
       </div>
 
-      {/* Recent Activity */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-semibold text-gray-900">Recent Activity</h2>
-        </div>
-        {stats?.recentQuotations?.length === 0 ? (
-          <p className="text-sm text-gray-400">No recent activity.</p>
-        ) : (
-          <div className="divide-y divide-gray-100">
-            {stats?.recentQuotations?.map((q) => (
-              <div key={q._id} className="flex items-center justify-between py-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-orange-100 flex items-center justify-center">
-                    <FileText size={16} className="text-orange-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{q.title}</p>
-                    <p className="text-xs text-gray-500">{q.vendor?.vendorName} • {q.vendor?.companyName}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <p className="text-xs text-gray-400">PKR {q.amount?.toLocaleString()}</p>
-                  <span className={`text-xs font-semibold px-2 py-1 rounded-full uppercase
-                    ${q.status === 'pending' ? 'bg-yellow-100 text-yellow-600' : ''}
-                    ${q.status === 'submitted' ? 'bg-blue-100 text-blue-600' : ''}
-                    ${q.status === 'approved' ? 'bg-green-100 text-green-600' : ''}
-                    ${q.status === 'rejected' ? 'bg-red-100 text-red-600' : ''}
-                  `}>
-                    {q.status}
-                  </span>
-                </div>
-              </div>
-            ))}
+      {/* Lower Section */}
+      <div className="grid grid-cols-3 gap-4">
+        {/* Recent Activity — 2/3 width */}
+        <div className="col-span-2 bg-white rounded-xl border border-gray-200">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <h2 className="text-sm font-bold text-gray-900">Recent Activity</h2>
+            <button className="text-xs text-amber-700 font-semibold hover:underline">View All</button>
           </div>
-        )}
+
+          {stats?.recentQuotations?.length === 0 ? (
+            <p className="text-sm text-gray-400 p-6">No recent activity.</p>
+          ) : (
+            <div className="divide-y divide-gray-100">
+              {stats?.recentQuotations?.map((q) => {
+                const s = statusColors[q.status] || statusColors.pending
+                return (
+                  <div key={q._id} className="flex items-center justify-between px-6 py-4">
+                    <div className="flex items-center gap-4">
+                      {/* Square icon chip */}
+                      <div className="w-9 h-9 rounded-lg border border-gray-200 bg-gray-50 flex items-center justify-center">
+                        <FileText size={15} className="text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900">{q.title}</p>
+                        <p className="text-xs text-gray-400 mt-0.5">
+                          {q.vendor?.vendorName} • {q.vendor?.companyName}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <p className="text-xs font-semibold text-gray-500">
+                        PKR {q.amount?.toLocaleString()}
+                      </p>
+                      <span className={`text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wide ${s.bg} ${s.text}`}>
+                        {s.label}
+                      </span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Right Panel — 1/3 width */}
+        <div className="space-y-4">
+          {/* Quotation Status Distribution */}
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <h3 className="text-sm font-bold text-gray-900 mb-4">Quotation Distribution</h3>
+            <div className="space-y-3">
+              {[
+                { label: 'Approved', value: stats?.approvedQuotations || 0, color: 'bg-emerald-500', total: (stats?.activeQuotations || 0) + (stats?.pendingQuotations || 0) + (stats?.approvedQuotations || 0) },
+                { label: 'Active', value: stats?.activeQuotations || 0, color: 'bg-blue-500', total: (stats?.activeQuotations || 0) + (stats?.pendingQuotations || 0) + (stats?.approvedQuotations || 0) },
+                { label: 'Pending', value: stats?.pendingQuotations || 0, color: 'bg-amber-500', total: (stats?.activeQuotations || 0) + (stats?.pendingQuotations || 0) + (stats?.approvedQuotations || 0) },
+              ].map((item) => {
+                const pct = item.total > 0 ? Math.round((item.value / item.total) * 100) : 0
+                return (
+                  <div key={item.label}>
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="text-xs font-medium text-gray-600">{item.label}</p>
+                      <p className="text-xs font-bold text-gray-900">{item.value}</p>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className={`h-2 rounded-full ${item.color} transition-all`}
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+            <button className="w-full mt-4 border border-gray-200 text-gray-600 text-xs font-semibold py-2 rounded-lg hover:bg-gray-50">
+              Detailed Report
+            </button>
+          </div>
+
+          {/* Quick Stats */}
+          <div className="bg-gray-900 rounded-xl p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-amber-400 text-lg">⚡</span>
+              <p className="text-xs font-bold text-amber-400 uppercase tracking-widest">Quick Stats</p>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-400">Total Vendors</p>
+                <p className="text-sm font-bold text-white">{stats?.totalVendors || 0}</p>
+              </div>
+              <div className="h-px bg-gray-700" />
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-400">Total Quotations</p>
+                <p className="text-sm font-bold text-white">
+                  {(stats?.activeQuotations || 0) + (stats?.pendingQuotations || 0) + (stats?.approvedQuotations || 0)}
+                </p>
+              </div>
+              <div className="h-px bg-gray-700" />
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-400">Approval Rate</p>
+                <p className="text-sm font-bold text-amber-400">
+                  {(() => {
+                    const total = (stats?.activeQuotations || 0) + (stats?.pendingQuotations || 0) + (stats?.approvedQuotations || 0)
+                    return total > 0 ? `${Math.round((stats?.approvedQuotations / total) * 100)}%` : '0%'
+                  })()}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

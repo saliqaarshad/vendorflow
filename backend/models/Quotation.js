@@ -28,7 +28,31 @@ const quotationSchema = new mongoose.Schema({
     type: String,
     enum: ['pending', 'submitted', 'approved', 'rejected'],
     default: 'pending'
-  }
+  },
+  deliveryTime: {
+    type: String,
+    default: ''
+  },
+  warranty: {
+    type: String,
+    default: ''
+  },
+  advancePayment: {
+    type: String,
+    default: ''
+  },
+  installation: {
+    type: String,
+    default: ''
+  },
+  lineItems: [
+    {
+      name: String,
+      qty: Number,
+      unit: String,
+      price: Number
+    }
+  ]
 }, { timestamps: true });
 
 module.exports = mongoose.model('Quotation', quotationSchema);
