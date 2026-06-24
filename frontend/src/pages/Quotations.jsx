@@ -88,7 +88,7 @@ export default function Quotations() {
               quotations.map((q) => (
                 <tr key={q._id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4">
-                    <p className="font-medium text-gray-900">{q.title}</p>
+                    <p className="font-medium text-gray-900 cursor-pointer hover:text-orange-500 transition-colors"  onClick={() => navigate(`/quotations/${q._id}`)}>{q.title}</p>
                     <p className="text-xs text-gray-400 mt-0.5">{q.description?.slice(0, 50)}...</p>
                   </td>
                   <td className="px-6 py-4">
