@@ -127,9 +127,7 @@ export default function Vendors() {
                       </div>
                       <div>
                         <p className="font-medium text-gray-900">{vendor.vendorName}</p>
-                        <p className="font-medium text-gray-900 cursor-pointer hover:text-orange-500 transition-colors"
-                        onClick={() => navigate(`/vendors/${vendor._id}`)}>
-                        {vendor.vendorName}</p>
+                        <p className="font-medium text-gray-900 cursor-pointer hover:text-orange-500 transition-colors"onClick={() => navigate(`/vendors/${vendor._id}`)}>{vendor.vendorName}</p>
                         <p className="text-xs text-gray-500">{vendor.companyName}</p>
                       </div>
                     </div>
