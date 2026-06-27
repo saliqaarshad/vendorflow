@@ -1,13 +1,11 @@
 import { useState } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Users, FileText, GitCompare, Bell, History, Settings, HelpCircle, X, Search } from 'lucide-react'
+import { LayoutDashboard, Users, FileText, GitCompare, Bell, History, Settings, HelpCircle, X } from 'lucide-react'
 
 export default function Layout() {
   const navigate = useNavigate()
   const [showNotifications, setShowNotifications] = useState(false)
   const [showHistory, setShowHistory] = useState(false)
-  const [showSettings, setShowSettings] = useState(false)
-  const [showSupport, setShowSupport] = useState(false)
   const [globalSearch, setGlobalSearch] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [showSearchResults, setShowSearchResults] = useState(false)
@@ -31,12 +29,14 @@ export default function Layout() {
     if (val.trim().length > 1) {
       setShowSearchResults(true)
       setSearchResults([
-        { type: 'Page', label: 'Dashboard', path: '/', icon: '🏠' },
-        { type: 'Page', label: 'Vendors', path: '/vendors', icon: '👥' },
-        { type: 'Page', label: 'Quotations', path: '/quotations', icon: '📄' },
-        { type: 'Page', label: 'Compare RFQs', path: '/compare', icon: '📊' },
-        { type: 'Action', label: 'Add New Vendor', path: '/vendors/add', icon: '➕' },
-        { type: 'Action', label: 'Add New Quotation', path: '/quotations/add', icon: '➕' },
+        { label: 'Dashboard', path: '/', icon: '🏠' },
+        { label: 'Vendors', path: '/vendors', icon: '👥' },
+        { label: 'Quotations', path: '/quotations', icon: '📄' },
+        { label: 'Compare RFQs', path: '/compare', icon: '📊' },
+        { label: 'Add New Vendor', path: '/vendors/add', icon: '➕' },
+        { label: 'Add New Quotation', path: '/quotations/add', icon: '➕' },
+        { label: 'Settings', path: '/settings', icon: '⚙️' },
+        { label: 'Support', path: '/support', icon: '❓' },
       ].filter(r => r.label.toLowerCase().includes(val.toLowerCase())))
     } else {
       setShowSearchResults(false)
@@ -47,8 +47,6 @@ export default function Layout() {
   const closeAll = () => {
     setShowNotifications(false)
     setShowHistory(false)
-    setShowSettings(false)
-    setShowSupport(false)
     setShowSearchResults(false)
   }
 
@@ -106,14 +104,14 @@ export default function Layout() {
           </NavLink>
           <div className="flex items-center gap-2 mt-2">
             <button
-              onClick={() => { closeAll(); setShowSettings(true) }}
+              onClick={() => navigate('/settings')}
               className="flex items-center gap-2 px-3 py-2 text-xs text-gray-500 hover:bg-gray-100 rounded-lg w-full"
             >
               <Settings size={15} />
               Settings
             </button>
             <button
-              onClick={() => { closeAll(); setShowSupport(true) }}
+              onClick={() => navigate('/support')}
               className="flex items-center gap-2 px-3 py-2 text-xs text-gray-500 hover:bg-gray-100 rounded-lg w-full"
             >
               <HelpCircle size={15} />
@@ -137,7 +135,6 @@ export default function Layout() {
               onFocus={() => globalSearch.length > 1 && setShowSearchResults(true)}
               className="w-full bg-gray-100 rounded-lg pl-9 pr-4 py-2 text-sm text-gray-600 outline-none focus:ring-2 focus:ring-orange-300"
             />
-            {/* Search Results Dropdown */}
             {showSearchResults && searchResults.length > 0 && (
               <div className="absolute top-10 left-0 right-0 bg-white rounded-xl border border-gray-200 shadow-lg z-50 overflow-hidden">
                 {searchResults.map((result, i) => (
@@ -147,10 +144,7 @@ export default function Layout() {
                     className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0"
                   >
                     <span>{result.icon}</span>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">{result.label}</p>
-                      <p className="text-xs text-gray-400">{result.type}</p>
-                    </div>
+                    <p className="text-sm font-medium text-gray-900">{result.label}</p>
                   </div>
                 ))}
               </div>
@@ -171,7 +165,9 @@ export default function Layout() {
                 <div className="absolute right-0 top-10 w-80 bg-white rounded-xl border border-gray-200 shadow-xl z-50">
                   <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
                     <p className="text-sm font-bold text-gray-900">Notifications</p>
-                    <button onClick={() => setShowNotifications(false)}><X size={16} className="text-gray-400" /></button>
+                    <button onClick={() => setShowNotifications(false)}>
+                      <X size={16} className="text-gray-400" />
+                    </button>
                   </div>
                   {notifications.map(n => (
                     <div key={n.id} className={`px-4 py-3 border-b border-gray-100 last:border-0 ${n.unread ? 'bg-orange-50' : ''}`}>
@@ -201,7 +197,9 @@ export default function Layout() {
                 <div className="absolute right-0 top-10 w-72 bg-white rounded-xl border border-gray-200 shadow-xl z-50">
                   <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
                     <p className="text-sm font-bold text-gray-900">Recent Activity</p>
-                    <button onClick={() => setShowHistory(false)}><X size={16} className="text-gray-400" /></button>
+                    <button onClick={() => setShowHistory(false)}>
+                      <X size={16} className="text-gray-400" />
+                    </button>
                   </div>
                   {recentHistory.map(h => (
                     <div key={h.id} className="flex items-start gap-3 px-4 py-3 border-b border-gray-100 last:border-0 hover:bg-gray-50">
@@ -220,7 +218,7 @@ export default function Layout() {
             {/* Divider */}
             <div className="w-px h-8 bg-gray-200"></div>
 
-            {/* User Profile */}
+            {/* User */}
             <div className="flex items-center gap-3">
               <div className="text-right">
                 <p className="text-sm font-semibold text-gray-900">Saliqa Arshad</p>
@@ -233,71 +231,11 @@ export default function Layout() {
           </div>
         </header>
 
-        {/* Settings Modal */}
-        {showSettings && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900">Settings</h2>
-                <button onClick={() => setShowSettings(false)}><X size={20} className="text-gray-400" /></button>
-              </div>
-              <div className="space-y-4">
-                {[
-                  { label: 'System Name', value: 'VendorFlow' },
-                  { label: 'Admin Name', value: 'Saliqa Arshad' },
-                  { label: 'Role', value: 'Full Stack Intern' },
-                  { label: 'Organization', value: 'TEYZIX CORE' },
-                ].map((item) => (
-                  <div key={item.label} className="flex items-center justify-between py-2 border-b border-gray-100">
-                    <p className="text-sm text-gray-500">{item.label}</p>
-                    <p className="text-sm font-semibold text-gray-900">{item.value}</p>
-                  </div>
-                ))}
-                <div className="flex items-center justify-between py-2">
-                  <p className="text-sm text-gray-500">Theme</p>
-                  <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Light Mode</span>
-                </div>
-                <div className="flex items-center justify-between py-2">
-                  <p className="text-sm text-gray-500">Version</p>
-                  <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">v1.0.0</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Support Modal */}
-        {showSupport && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900">Support</h2>
-                <button onClick={() => setShowSupport(false)}><X size={20} className="text-gray-400" /></button>
-              </div>
-              <div className="space-y-4">
-                <div className="bg-orange-50 rounded-xl p-4">
-                  <p className="text-sm font-semibold text-gray-900 mb-1">📧 Email Support</p>
-                  <p className="text-xs text-gray-500">hello@teyzixcore.com</p>
-                </div>
-                <div className="bg-gray-50 rounded-xl p-4">
-                  <p className="text-sm font-semibold text-gray-900 mb-1">📱 WhatsApp</p>
-                  <p className="text-xs text-gray-500">+92371-4699788</p>
-                </div>
-                <div className="bg-gray-50 rounded-xl p-4">
-                  <p className="text-sm font-semibold text-gray-900 mb-1">🌐 Website</p>
-                  <p className="text-xs text-gray-500">www.teyzixcore.com</p>
-                </div>
-                <div className="bg-gray-900 rounded-xl p-4">
-                  <p className="text-sm font-semibold text-white mb-1">⚡ VendorFlow v1.0.0</p>
-                  <p className="text-xs text-gray-400">Built by Saliqa Arshad — TEYZIX CORE Internship June 2026</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-6" onClick={() => { setShowSearchResults(false); setShowNotifications(false); setShowHistory(false) }}>
+        <main
+          className="flex-1 overflow-y-auto p-6"
+          onClick={() => { setShowSearchResults(false); setShowNotifications(false); setShowHistory(false) }}
+        >
           <Outlet />
         </main>
       </div>
