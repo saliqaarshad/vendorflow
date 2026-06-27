@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://vendorflow-backend.vercel.app/api',
 });
 
 export const getVendors = (search = '') => API.get(`/vendors?search=${search}`);
