@@ -7,9 +7,7 @@ export default function Settings() {
   const { darkMode, setDarkMode } = useTheme()
   const [form, setForm] = useState({
     name: 'Saliqa Arshad',
-    email: 'saliqa@teyzixcore.com',
-    role: 'Full Stack Intern',
-    organization: 'TEYZIX CORE',
+    email: 'saliqaarshad@gmail.com',
     notifications: true,
     emailAlerts: true,
   })
@@ -50,8 +48,6 @@ export default function Settings() {
               {[
                 { label: 'Full Name', key: 'name', placeholder: 'Your name' },
                 { label: 'Email Address', key: 'email', placeholder: 'your@email.com' },
-                { label: 'Role', key: 'role', placeholder: 'Your role' },
-                { label: 'Organization', key: 'organization', placeholder: 'Organization name' },
               ].map((field) => (
                 <div key={field.key}>
                   <label className="text-xs font-medium text-gray-500 mb-1 block">{field.label}</label>
@@ -162,8 +158,8 @@ export default function Settings() {
               SA
             </div>
             <p className="text-base font-bold text-gray-900">{form.name}</p>
-            <p className="text-xs text-gray-400 mt-1">{form.role}</p>
-            <p className="text-xs text-gray-400">{form.organization}</p>
+            <p className="text-xs text-gray-400 mt-1">Full Stack Developer</p>
+            <p className="text-xs text-gray-400">VendorFlow</p>
             <div className="mt-3 pt-3 border-t border-gray-100">
               <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full font-semibold">● Active</span>
             </div>
@@ -180,7 +176,7 @@ export default function Settings() {
                 { label: 'Stack', value: 'MERN' },
                 { label: 'Database', value: 'MongoDB Atlas' },
                 { label: 'Deployed', value: 'Vercel' },
-                { label: 'Task', value: 'FS-2' },
+                { label: 'GitHub', value: 'saliqaarshad' },
               ].map((item) => (
                 <div key={item.label} className="flex items-center justify-between text-xs py-1 border-b border-gray-50 last:border-0">
                   <span className="text-gray-400">{item.label}</span>

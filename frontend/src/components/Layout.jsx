@@ -6,6 +6,7 @@ export default function Layout() {
   const navigate = useNavigate()
   const [showNotifications, setShowNotifications] = useState(false)
   const [showHistory, setShowHistory] = useState(false)
+  const [showProfile, setShowProfile] = useState(false)
   const [globalSearch, setGlobalSearch] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [showSearchResults, setShowSearchResults] = useState(false)
@@ -48,13 +49,13 @@ export default function Layout() {
     setShowNotifications(false)
     setShowHistory(false)
     setShowSearchResults(false)
+    setShowProfile(false)
   }
 
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
-        {/* Logo */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center">
@@ -67,7 +68,6 @@ export default function Layout() {
           </div>
         </div>
 
-        {/* Nav Links */}
         <nav className="flex-1 p-4 space-y-1">
           <p className="text-xs text-gray-400 font-semibold uppercase mb-2 px-2">General</p>
           {[
@@ -94,7 +94,6 @@ export default function Layout() {
           ))}
         </nav>
 
-        {/* Bottom */}
         <div className="p-4 space-y-2 border-t border-gray-200">
           <NavLink
             to="/vendors/add"
@@ -123,7 +122,6 @@ export default function Layout() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Navbar */}
         <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between relative z-50">
           <div className="flex-1 max-w-xl relative">
             <span className="absolute left-3 top-2.5 text-gray-400 text-sm">🔍</span>
@@ -218,23 +216,62 @@ export default function Layout() {
             {/* Divider */}
             <div className="w-px h-8 bg-gray-200"></div>
 
-            {/* User */}
-            <div className="flex items-center gap-3">
-              <div className="text-right">
-                <p className="text-sm font-semibold text-gray-900">Saliqa Arshad</p>
-                <p className="text-xs text-gray-400">Full Stack Intern</p>
+            {/* User Profile */}
+            <div className="relative">
+              <div
+                className="flex items-center gap-3 cursor-pointer"
+                onClick={() => { closeAll(); setShowProfile(!showProfile) }}
+              >
+                <div className="text-right">
+                  <p className="text-sm font-semibold text-gray-900">Saliqa Arshad</p>
+                  <p className="text-xs text-gray-400">Full Stack Intern</p>
+                </div>
+                <div className="w-9 h-9 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-sm">
+                  SA
+                </div>
               </div>
-              <div className="w-9 h-9 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-sm">
-                SA
-              </div>
+
+              {showProfile && (
+                <div className="absolute right-0 top-12 w-64 bg-white rounded-xl border border-gray-200 shadow-xl z-50">
+                  <div className="p-4 border-b border-gray-100">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold">
+                        SA
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-gray-900">Saliqa Arshad</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-2">
+                    <button
+                      onClick={() => { navigate('/settings'); setShowProfile(false) }}
+                      className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg"
+                    >
+                      ⚙️ Settings
+                    </button>
+                    <button
+                      onClick={() => { navigate('/support'); setShowProfile(false) }}
+                      className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg"
+                    >
+                      ❓ Support
+                    </button>
+                    <div className="border-t border-gray-100 mt-2 pt-2">
+                      <div className="px-3 py-2">
+                        <p className="text-xs text-gray-400">Full Stack Developer</p>
+                        <p className="text-xs text-gray-400">VendorFlow v1.0.0</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </header>
 
-        {/* Page Content */}
         <main
           className="flex-1 overflow-y-auto p-6"
-          onClick={() => { setShowSearchResults(false); setShowNotifications(false); setShowHistory(false) }}
+          onClick={() => { setShowSearchResults(false); setShowNotifications(false); setShowHistory(false); setShowProfile(false) }}
         >
           <Outlet />
         </main>
