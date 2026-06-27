@@ -126,8 +126,12 @@ export default function Vendors() {
                         {getInitials(vendor.vendorName)}
                       </div>
                       <div>
-                        <p className="font-medium text-gray-900">{vendor.vendorName}</p>
-                        <p className="font-medium text-gray-900 cursor-pointer hover:text-orange-500 transition-colors"onClick={() => navigate(`/vendors/${vendor._id}`)}>{vendor.vendorName}</p>
+                        <p
+                          className="font-medium text-gray-900 cursor-pointer hover:text-orange-500 transition-colors"
+                          onClick={() => navigate(`/vendors/${vendor._id}`)}
+                        >
+                          {vendor.vendorName}
+                        </p>
                         <p className="text-xs text-gray-500">{vendor.companyName}</p>
                       </div>
                     </div>
@@ -157,7 +161,6 @@ export default function Vendors() {
           </tbody>
         </table>
 
-        {/* Table Footer */}
         <div className="px-6 py-3 border-t border-gray-100 text-xs text-gray-400">
           Showing {vendors.length} vendor{vendors.length !== 1 ? 's' : ''}
         </div>
